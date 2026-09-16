@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Side-by-side comparison of long-read alignment visualization outputs from Bamsnap-LRS, Wally, and SVhawkeye."><title>Bamsnap-LRS visualization comparison</title><link rel="stylesheet" href="styles.css"></head>
+<body><div class="shell">
+<header class="hero"><div class="hero-inner"><div class="eyebrow">Bamsnap-LRS · visualization gallery</div><h1>Long-read alignment visualization comparison</h1><p>Explore matched genomic regions across Bamsnap-LRS, Wally, and SVhawkeye. The gallery includes insertion, deletion, inversion, duplication, and RNA-splicing examples and preserves the original visualization output for each tool.</p><div class="summary" id="summary"></div></div></header>
+<nav class="tabs" id="tabs" aria-label="Variant type"></nav>
+<section class="controls" aria-label="Gallery controls">
+<div class="field"><label for="locusSelect">Locus</label><select id="locusSelect"></select></div>
+<div class="field"><label for="searchInput">Find locus or coordinate</label><input id="searchInput" type="search" placeholder="e.g. INS27 or chr10:134028045" autocomplete="off"><div id="searchNote" class="notice" hidden></div></div>
+<div class="control-actions"><button class="btn" id="prevBtn">← Previous</button><button class="btn primary" id="nextBtn">Next →</button></div>
+</section>
+<div class="meta"><div class="locus"><h2 id="locusTitle"></h2><div class="sub" id="locusMeta"></div></div><div class="meta-actions"><button class="btn" id="copyBtn">Copy direct link</button><button class="btn" id="layoutBtn">Stack vertically</button></div></div>
+<main class="comparison" id="comparison"></main>
+<section class="help"><strong>How to use.</strong> Select a variant class and locus to keep all three tools synchronized. Click an image to inspect its original resolution. Use <span class="kbd">←</span>/<span class="kbd">→</span> to move between loci. Deep links use <span class="kbd">?type=INS&id=INS1</span>, so individual examples can be cited or shared. A “Not available” card means no corresponding image was present in the uploaded result set.</section>
+<footer class="footer">Static, dependency-free gallery prepared for GitHub Pages.</footer>
+</div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Full-resolution image"><div class="modalbar"><strong id="modalTitle"></strong><button class="btn" id="closeModal">Close ×</button></div><div class="modalbody" id="modalBody"><img id="modalImg" alt=""></div></div>
+<script src="data.js"></script><script src="app.js"></script></body></html>
