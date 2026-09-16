@@ -19,9 +19,49 @@ $('#prevBtn').onclick=()=>{if(idx>0){idx--;renderCards();updateMeta()}};$('#next
 $('#layoutBtn').onclick=()=>{stacked=!stacked;comp.classList.toggle('stacked',stacked);$('#layoutBtn').textContent=stacked?'Use columns':'Stack vertically'};
 $('#copyBtn').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('#copyBtn').textContent='Copied';setTimeout(()=>$('#copyBtn').textContent='Copy direct link',1200)}catch{prompt('Copy this link:',location.href)}};
 $('#searchInput').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();const note=$('#searchNote');if(!q){note.hidden=true;return}const records=DATA[type].records;const hit=records.findIndex(r=>r.id.toLowerCase()===q||r.region.toLowerCase().replaceAll(',','').includes(q.replaceAll(',',''))||`${r.chrom}:${r.start}-${r.end}`.toLowerCase().includes(q.replaceAll(',','')));if(hit>=0){idx=hit;renderCards();updateMeta();note.hidden=true}else{note.textContent='No matching locus in this category.';note.hidden=false}});
-function openModal(src,title){$('#modalImg').src=src;$('#modalTitle').textContent=title;$('#modal').classList.add('open');document.body.style.overflow='hidden'}
-function closeModal(){ $('#modal').classList.remove('open');$('#modalImg').src='';document.body.style.overflow=''}
-$('#closeModal').onclick=closeModal;$('#modal').addEventListener('click',e=>{if(e.target===$('#modal')||e.target===$('#modalBody'))closeModal()});
+const modal=$('#modal'), modalBody=$('#modalBody'), modalImg=$('#modalImg'), zoomLabel=$('#zoomLabel');
+let zoom=1, fitZoom=1, dragging=false, dragX=0, dragY=0, dragLeft=0, dragTop=0;
+const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
+function calcFitZoom(){
+  if(!modalImg.naturalWidth)return 1;
+  const usableWidth=Math.max(160,modalBody.clientWidth-36);
+  return Math.min(1,usableWidth/modalImg.naturalWidth);
+}
+function applyZoom(next,anchorX=null,anchorY=null){
+  if(!modalImg.naturalWidth)return;
+  next=clamp(next,0.1,5);
+  const rect=modalBody.getBoundingClientRect();
+  const px=anchorX==null?rect.left+modalBody.clientWidth/2:anchorX;
+  const py=anchorY==null?rect.top+modalBody.clientHeight/2:anchorY;
+  const ox=modalBody.scrollLeft+(px-rect.left);
+  const oy=modalBody.scrollTop+(py-rect.top);
+  const ratio=next/zoom;
+  zoom=next;
+  modalImg.style.width=`${Math.round(modalImg.naturalWidth*zoom)}px`;
+  modalImg.style.height='auto';
+  zoomLabel.textContent=`${Math.round(zoom*100)}%`;
+  requestAnimationFrame(()=>{
+    modalBody.scrollLeft=ox*ratio-(px-rect.left);
+    modalBody.scrollTop=oy*ratio-(py-rect.top);
+  });
+}
+function fitImage(){fitZoom=calcFitZoom();zoom=fitZoom;modalImg.style.width=`${Math.round(modalImg.naturalWidth*zoom)}px`;modalImg.style.height='auto';zoomLabel.textContent=`${Math.round(zoom*100)}%`;modalBody.scrollLeft=0;modalBody.scrollTop=0}
+function openModal(src,title){
+  modalImg.onload=()=>{fitImage()};
+  modalImg.src=src;$('#modalTitle').textContent=title;modal.classList.add('open');document.body.style.overflow='hidden';
+}
+function closeModal(){modal.classList.remove('open');modalImg.onload=null;modalImg.src='';modalImg.style.width='';document.body.style.overflow='';dragging=false;modalBody.classList.remove('dragging')}
+$('#zoomIn').onclick=()=>applyZoom(zoom*1.25);
+$('#zoomOut').onclick=()=>applyZoom(zoom/1.25);
+$('#zoomFit').onclick=fitImage;
+$('#zoomActual').onclick=()=>applyZoom(1);
+$('#closeModal').onclick=closeModal;
+modalBody.addEventListener('wheel',e=>{if(!modal.classList.contains('open'))return;e.preventDefault();applyZoom(zoom*(e.deltaY<0?1.15:1/1.15),e.clientX,e.clientY)},{passive:false});
+modalImg.addEventListener('dblclick',e=>{e.preventDefault();const nearActual=Math.abs(zoom-1)<0.05;applyZoom(nearActual?fitZoom:1,e.clientX,e.clientY)});
+modalBody.addEventListener('mousedown',e=>{if(e.button!==0)return;dragging=true;dragX=e.clientX;dragY=e.clientY;dragLeft=modalBody.scrollLeft;dragTop=modalBody.scrollTop;modalBody.classList.add('dragging');e.preventDefault()});
+window.addEventListener('mousemove',e=>{if(!dragging)return;modalBody.scrollLeft=dragLeft-(e.clientX-dragX);modalBody.scrollTop=dragTop-(e.clientY-dragY)});
+window.addEventListener('mouseup',()=>{dragging=false;modalBody.classList.remove('dragging')});
+window.addEventListener('resize',()=>{if(modal.classList.contains('open'))fitZoom=calcFitZoom()});
 document.addEventListener('keydown',e=>{if($('#modal').classList.contains('open')){if(e.key==='Escape')closeModal();return}if(e.target.matches('input,select'))return;if(e.key==='ArrowLeft')$('#prevBtn').click();if(e.key==='ArrowRight')$('#nextBtn').click()});
 const requestedId=qs.get('id');if(requestedId){const n=DATA[type].records.findIndex(r=>r.id===requestedId);if(n>=0)idx=n}
 summary();buildTabs();renderAll(false);
