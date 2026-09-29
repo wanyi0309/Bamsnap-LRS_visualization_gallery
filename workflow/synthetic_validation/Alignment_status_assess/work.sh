@@ -40,3 +40,10 @@ do
     python validate_bamsnap_intermediate.py --reference $CASE.ONT.sam_reference.tsv --paf $CASE.ONT.paf --intermediate $CASE.ONT.bamsnap_intermediate.tsv -o $CASE.ONT.validation.tsv
     cd ..
 done
+
+tar  -czvf  DUP1.result.tar.gz  DUP1/
+tar  -czvf  DUP2.result.tar.gz  DUP2/
+tar  -czvf  DUP3.result.tar.gz  DUP4/
+tar  -czvf  INV1.result.tar.gz  INV1/
+tar  -czvf  INV2.result.tar.gz  INV2/
+tar  -czvf  INV3.result.tar.gz  INV3/
