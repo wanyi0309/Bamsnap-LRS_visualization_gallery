@@ -28,6 +28,7 @@ bcftools view -H -R HG002_CHM13v2.0_v5.0q_stvar.benchmark.bed  -i 'INFO/SVTYPE="
 awk '{a+=1}{print $1"\t"($2-1)"\t"($2-1)"\tINS"}' insertion_GIAB_random50.vcf > insertion_GIAB_random50.bed
 awk '{a+=1}{print $1"\t"($2-1-150)"\t"($2-1+150)"\tINS"NR}' insertion_GIAB_random50.vcf > insertion_GIAB_random50.padding150.bed
 
+#Visualization
 time -v bamsnap-lrs dna --bam HIFI.primary.sort.bam --bam ONT.primary.sort.bam --regions insertion_GIAB_random50.vcf --out-prefix bamsnap/insertion_ONT_HIFI.png --fa chm13v2.0.fa  --show-axis --show-coverage --padding 150  --detail high --overview-detail show > bamsnap_ins.runtime.log 2>&1 
 
 time -v hawkeye.py sv_browse -g chm13 -i HIFI.primary.sort.bam,ONT.primary.sort.bam  -b insertion_GIAB_random50.bed -r chm13v2.0.fa -o svhawkeye/ -q 0 -I 0 -d 150 -F png -f bed --sv_min_length 0  > svhawkeye_ins.runtime.log 2>&1 
