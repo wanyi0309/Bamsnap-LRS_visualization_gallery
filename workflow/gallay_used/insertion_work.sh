@@ -19,8 +19,10 @@ gzip -d chm13v2.0.fa.gz
 #mapping
 ##HIFI
 minimap2 -a -t 64 -x map-hifi -Q --eqx --secondary=no -K4G --MD -Y -L chm13v2.0.fa.gz m64011_190830_220126.Q20.fastq m64011_190901_095311.Q20.fastq | samtools view -bh -@ 64 - | samtools sort -@ 64 -o HIFI.primary.sort.bam -
+samtools index HIFI.primary.sort.bam
 ##ONT
 minimap2 -a -t 64 -x map-ont -Q --eqx --secondary=no -K4G --MD -Y -L chm13v2.0.fa.gz all_pass.vhg002v1.fastq | samtools view -bh -@ 64 - | samtools sort -@ 64 -o ONT.primary.sort.bam -
+samtools index ONT.primary.sort.bam
 
 # Variant selection
 bcftools view -H -R HG002_CHM13v2.0_v5.0q_stvar.benchmark.bed  -i 'INFO/SVTYPE="INS" && INFO/SVLEN>50' HG002_CHM13v2.0_v5.0q_stvar.vcf.gz |  shuf --random-source=<(yes 123456789) -n 50  > insertion_GIAB_random50.vcf
