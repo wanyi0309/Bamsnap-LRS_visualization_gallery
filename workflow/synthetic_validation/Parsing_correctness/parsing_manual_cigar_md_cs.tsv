@@ -1,0 +1,18 @@
+case_id	record_id	qname	flag	chrom_name	ref_start_0based	mapq	cigar	manual_event(0-based offset)	manual_MD	manual_cs	tag_design	note
+R01	R01-P	R01_parse_match	0	chrTest	100	60	20M	perfect match	20	:20	MD+cs	normal read
+R02	R02-P	R02_parse_mismatch_M_reverse	16	chrTest	100	60	20M	offset 8: A => C	8A11	:8*ac:11	MD+cs	reverse-strand record; MD/cs describe aligned orientation
+R03	R03-P	R03_parse_explicit_eq_x	0	chrTest	100	60	8=2X10=	offset 8: A => C; offset 9: C => G	8A0C10	:8*ac*cg:10	MD+cs	adjacent mismatches require 0 in MD
+R04	R04-P	R04_parse_insertion	0	chrTest	100	60	10M3I14M	insert GTA after 10 aligned reference bases	24	:10+gta:14	MD+cs	MD does not encode insertion
+R05	R05-P	R05_parse_deletion	16	chrTest	100	60	10M4D10M	delete ref[110:114)=GCTC	10^GCTC10	:10-gctc:10	MD+cs	reverse-strand record
+R06	R06-P	R06_parse_refskip	0	chrTest	100	60	10M50N10M	"skip ref[110:160), donor GC, acceptor CG"	20	:10~gc50cg:10	MD+cs	MD does not encode N
+R07	R07-P	R07_parse_clipping	0	chrTest	100	60	5H5S20M5S15H	5H + 5S + 20M + 5S + 15H	20	:20	MD+cs	MD/cs do not encode clipping
+R08	R08-P	R08_parse_padding	0	chrTest	100	60	10M3P10M	3P between two 10-bp match blocks	20	:20	MD+cs	MD/cs do not encode P
+R09	R09-P	R09_parse_complex	0	chrTest	100	60	4S6M1I5M2D4M12N6M3S	soft clips ACGT/TGA; offset 3: T => A; insert G; delete ref[111:113)=CT; skip ref[117:129) (GG...GA); offset 31: C => G	3T7^CT6C3	:3*ta:2+g:5-ct:4~gg12ga:2*cg:3	MD+cs	"complex mixed case; MD 3T7^CT6C3 = 3 matches, ref T mismatch, 7 matches, delete CT, 6 matches, ref C mismatch, 3 matches; MD ignores I/S/N; cs ignores S"
+R10	R10-P	R10_status_supplementary	0	chrTest	100	60	30M30S	query=ref[100:130)+ref[500:530); first 30 bp aligned	30	:30	MD+cs	same full query as R10-S
+R10	R10-S	R10_status_supplementary	2048	chrTest	500	60	30S30M	same query; last 30 bp aligned to ref[500:530)	30	:30	MD+cs	supplementary FLAG 0x800
+R11	R11-P	R11_status_secondary	0	chrTest	100	60	25M	"query=ref[100:125), perfect match"	25	:25	MD+cs	same query as R11-2
+R11	R11-2	R11_status_secondary	256	chrTest	700	60	25M	same query aligned to duplicated ref[700:725)	25	:25	MD+cs	secondary FLAG 0x100
+T01	T01-P	T01_tags_both	0	chrTest	100	60	20M	offset 14: G => T	14G5	:14*gt:5	MD+cs	both tags present
+T02	T02-P	T02_tags_md_only	0	chrTest	100	60	20M	offset 14: G => T	14G5		MD only	cs absent
+T03	T03-P	T03_tags_cs_only	0	chrTest	100	60	20M	offset 14: G => T		:14*gt:5	cs only	MD absent
+T04	T04-P	T04_tags_neither	0	chrTest	100	60	20M	offset 14: G => T			neither	MD and cs absent
