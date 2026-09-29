@@ -17,8 +17,10 @@ gzip -d chm13v2.0.fa.gz
 #mapping
 ##HIFI
 minimap2 -a -t 64 -x map-hifi -Q --eqx --secondary=no -K4G --MD -Y -L chm13v2.0.fa.gz m64011_190830_220126.Q20.fastq m64011_190901_095311.Q20.fastq | samtools view -bh -@ 64 - | samtools sort -@ 64 -o HIFI.primary.sort.bam -
+samtools index HIFI.primary.sort.bam
 ##ONT
 minimap2 -a -t 64 -x map-ont -Q --eqx --secondary=no -K4G --MD -Y -L chm13v2.0.fa.gz all_pass.vhg002v1.fastq | samtools view -bh -@ 64 - | samtools sort -@ 64 -o ONT.primary.sort.bam -
+samtools index ONT.primary.sort.bam
 
 # Variant selection
 bcftools view -s NA24385 -Ou variants_T2T-CHM13_sv_inv_sym_HGSVC2024v1.0.vcf.gz | bcftools view -i 'GT="alt" && INFO/SVLEN<100000' | grep -v "#" > inversion.vcf
