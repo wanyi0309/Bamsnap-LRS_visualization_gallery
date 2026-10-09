@@ -34,3 +34,4 @@ Other tools:
 - samtools HTSlib 1.17
 - bcftools 1.11
 - bcftools HTSlib 1.11
+- bedtools 2.29.2
