@@ -4,13 +4,9 @@ wget https://cgl.gi.ucsc.edu/data/LRGASP/annotations/human/LRGASP_manual_annotat
 
 ##BAM
 # Pacbio
-wget https://www.encodeproject.org/files/ENCFF985LGZ/@@download/ENCFF985LGZ.bam
-wget https://www.encodeproject.org/files/ENCFF373TKM/@@download/ENCFF373TKM.bam
-wget https://www.encodeproject.org/files/ENCFF388HXU/@@download/ENCFF388HXU.bam
-# ONT
-wget https://www.encodeproject.org/files/ENCFF281OVX/@@download/ENCFF281OVX.bam
-wget https://www.encodeproject.org/files/ENCFF469VMX/@@download/ENCFF469VMX.bam
-wget https://www.encodeproject.org/files/ENCFF466MIS/@@download/ENCFF466MIS.bam
+wget https://www.encodeproject.org/files/ENCFF166IXJ/@@download/ENCFF166IXJ.bam
+wget https://www.encodeproject.org/files/ENCFF169CBQ/@@download/ENCFF169CBQ.bam
+wget https://www.encodeproject.org/files/ENCFF708JUG/@@download/ENCFF708JUG.bam
 
 ##reference genome
 wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_genomic.fna.gz
@@ -26,18 +22,12 @@ sort -k1,1V -k2,2n -k3,3n LRGASP_manual_annotation.human.cDNA_PacBio.wally.bed >
 bgzip LRGASP_manual_annotation.human.cDNA_PacBio.wally.sorted.bed
 tabix -p bed  LRGASP_manual_annotation.human.cDNA_PacBio.wally.sorted.bed.gz
 
-# https://www.encodeproject.org/experiments/ENCSR507JOF/ human WTC11 hg38 pcabio
-/share/app/samtools/1.11/bin/samtools sort -@ 16 -o ENCFF985LGZ.sorted.bam ENCFF985LGZ.bam
-/share/app/samtools/1.11/bin/samtools sort -@ 16 -o ENCFF373TKM.sorted.bam ENCFF373TKM.bam
-/share/app/samtools/1.11/bin/samtools sort -@ 16 -o ENCFF388HXU.sorted.bam ENCFF388HXU.bam
-/share/app/samtools/1.11/bin/samtools merge -@ 16 human.hg38.Pacbio.merged.bam ENCFF985LGZ.sorted.bam ENCFF373TKM.sorted.bam ENCFF388HXU.sorted.bam
-/share/app/samtools/1.11/bin/samtools index human.hg38.Pacbio.merged.bam
-# https://www.encodeproject.org/experiments/ENCSR392BGY/ human WTC11 hg38 ont
-/share/app/samtools/1.11/bin/samtools sort -@ 16 -o ENCFF466MIS.sorted.bam ENCFF466MIS.bam
-/share/app/samtools/1.11/bin/samtools sort -@ 16 -o ENCFF281OVX.sorted.bam ENCFF281OVX.bam
-/share/app/samtools/1.11/bin/samtools sort -@ 16 -o ENCFF469VMX.sorted.bam ENCFF469VMX.bam
-/share/app/samtools/1.11/bin/samtools merge -@ 16 human.hg38.ONT.merged.bam ENCFF466MIS.sorted.bam ENCFF281OVX.sorted.bam ENCFF469VMX.sorted.bam
-/share/app/samtools/1.11/bin/samtools index human.hg38.ONT.merged.bam
+# https://www.encodeproject.org/experiments/ENCSR507JOF/ human WTC11 hg38 pacbio unfilter
+/share/app/samtools/1.11/bin/samtools sort -@ 16 -o ENCFF166IXJ.sorted.bam ENCFF166IXJ.bam
+/share/app/samtools/1.11/bin/samtools sort -@ 16 -o ENCFF169CBQ.sorted.bam ENCFF169CBQ.bam
+/share/app/samtools/1.11/bin/samtools sort -@ 16 -o ENCFF708JUG.sorted.bam ENCFF708JUG.bam
+/share/app/samtools/1.11/bin/samtools merge -@ 16 human.hg38.Pacbio.unfilter.merged.bam ENCFF166IXJ.sorted.bam ENCFF169CBQ.sorted.bam ENCFF708JUG.sorted.bam
+/share/app/samtools/1.11/bin/samtools index human.hg38.Pacbio.unfilter.merged.bam
 
 ## plot region
 python bed12_gene_regions.py LRGASP_manual_annotation.human.cDNA_PacBio.bed.gz --gene-map Supplementary_Data14_human_genes.tsv --mapped-only -o LRGASP_cDNA_PacBio_50genes_regions.bed --details LRGASP_cDNA_PacBio_50genes_regions.tsv
