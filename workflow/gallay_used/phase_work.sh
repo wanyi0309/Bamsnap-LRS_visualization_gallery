@@ -18,7 +18,7 @@ grep '^chr' hg38.fa.fai | cut -f1-2 > hg38.genome
 # hg38.chromosome_band.txt down from https://genome.ucsc.edu/cgi-bin/hgTables
 awk '$5=="gvar" || $5=="acen" || $5=="stalk"' hg38.chromosome_band.txt > hg38.chromosome_band.gvar_acen_stalk.txt
 
-/share/app/bedtools/2.29.2/bin/bedtools shuffle -seed 123456789 -i random_length_seed.bed -g hg39.genome -excl hg38.chromosome_band.gvar_acen_stalk.txt > random_50_regions.bed
+/share/app/bedtools/2.29.2/bin/bedtools shuffle -seed 123456789 -i random_length_seed.bed -g hg38.genome -excl hg38.chromosome_band.gvar_acen_stalk.txt > random_50_regions.bed
 awk '{print $1"\t"$2"\t"$3"\trandom_region"NR}' random_50_regions.bed > random_50_regions.forwally.bed
 
 
